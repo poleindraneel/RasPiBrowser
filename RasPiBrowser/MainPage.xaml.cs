@@ -22,6 +22,8 @@ namespace RasPiBrowser
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        private bool m_FullScreen = false;
         public MainPage()
         {
             this.InitializeComponent();
@@ -31,6 +33,7 @@ namespace RasPiBrowser
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             webView.Navigate(new Uri("http://google.com"));
+            //BaseGrid.RowDefinitions.ElementAt(0).Height = new GridLength(0);
         }
 
         private void Go_Web_Click(object sender, RoutedEventArgs e)
@@ -55,7 +58,10 @@ namespace RasPiBrowser
             {
                 if (Web_Address.Text.Length > 0)
                 {
-                    webView.Navigate(new Uri("http://" + Web_Address.Text));
+                    if (Web_Address.Text.Contains("http://"))
+                        webView.Navigate(new Uri(Web_Address.Text));
+                    else
+                        webView.Navigate(new Uri("http://" + Web_Address.Text));
                 }
                 else
                 {
@@ -68,6 +74,7 @@ namespace RasPiBrowser
             }
         }
 
+        
         private void Go_FacebookClick(object sender, RoutedEventArgs e)
         {
             Web_Address.Text = "https://www.facebook.com";
@@ -81,7 +88,7 @@ namespace RasPiBrowser
         }
 
         private void Go_YoutubeClick(object sender, RoutedEventArgs e)
-        {
+        {   
             Web_Address.Text = "https://www.youtube.com";
             DoWebNavigate();
         }
@@ -103,6 +110,27 @@ namespace RasPiBrowser
         {
             webView.Visibility = Visibility.Visible;
             MessageStackPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void Grid_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (!m_FullScreen)
+            {
+                BaseGrid.RowDefinitions.ElementAt(0).Height = new GridLength(0);
+                m_FullScreen = true;
+            }
+            else
+            {
+                BaseGrid.RowDefinitions.ElementAt(0).Height = new GridLength(75);
+                m_FullScreen = false;
+            }
+        }
+
+        private void Go_FavClick(object sender, RoutedEventArgs e)
+        {
+            Button clickedButton = (Button)sender;
+            
+            
         }
     }
 }
